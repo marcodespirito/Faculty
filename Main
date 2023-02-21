@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
 """
 Created on Fri Jan 27 11:08:02 2023
-
-@author: digia
 """
 
 from datetime import datetime, timedelta
 import pandas as pd
 from pybliometrics.scopus import AuthorRetrieval
+import requests
+import io
 
 def Article_xlsx(df_art):
     df_art['DOI']=df_art['DOI'].fillna('')
@@ -19,10 +18,12 @@ def Article_xlsx(df_art):
     # Drop the 'id' column
     result = result.drop(columns=['id','Author'])
     result = result.reset_index(drop=True)
-    result.to_excel('path_to_save_the_file', sheet_name='Sheet1', index=False)
+    
+    # WARNING: modify the following path to save the file outside your working dir
+    result.to_excel('Articoli.xlsx', sheet_name='Sheet1', index=False)
     return()
 
-def Researchers_metrics(df_art):
+def Researchers_metrics(df_art,df):
     today = datetime.today().date()
     monthago=today-timedelta(days=30)
     yearago=today-timedelta(days=365)
@@ -38,8 +39,6 @@ def Researchers_metrics(df_art):
     result['Article_ID']=range(len(result))
     result['Whole_Art_inf']=result['Articoli']+",_"+result['Journal']+",_DOI:"+result['DOI']
     
-    df = pd.read_excel('C:/Users/digia/OneDrive/Desktop/Codes/Python_Scripts/Scopus/Database_Ricercatori/Database_definitivi/Ricercatori_Definitiva.xlsx',
-                        dtype={"Scopus_ID1": str,"Scopus_ID2": str,"Scopus_ID3": str,"Scopus_ID4": str})
     
     df_p=df.copy()
     df_p = df_p.drop(columns=['Qualifica', 'Codice Nuovo Ssd',
@@ -93,16 +92,19 @@ def Researchers_metrics(df_art):
         df.loc[i,'#Articles_last_month'] = len(df_filtered[(df_filtered['Date'].dt.date >= monthago) & (df_filtered['Date'].dt.date <= today)])
         df.loc[i,'Articles_last_year'] =(df_filtered[(df_filtered['Date'].dt.date >= yearago) & (df_filtered['Date'].dt.date <= today)])['Whole_Art_inf'].str.cat(sep=';')
         df.loc[i,'Articles_last_month'] =(df_filtered[(df_filtered['Date'].dt.date >= monthago) & (df_filtered['Date'].dt.date <= today)])['Whole_Art_inf'].str.cat(sep=';')
-    df.to_excel('path_to_save_the_file', sheet_name='Sheet1', index=False)  
+    
+    # WARNING: modify the following path to save the file outside your working dir
+    df.to_excel('Metriche_ricercatori.xlsx', sheet_name='Sheet1', index=False)  
 
+# WARNING: modify the following path to get the Ricercatori.xlsx file from your path
+path="path+Ricercatori.xlsx"
 
 # Read the CSV file from a URL into a DataFrame
-df = pd.read_excel('C:/Users/digia/OneDrive/Desktop/Codes/Python_Scripts/Scopus/Database_Ricercatori/Database_definitivi/Ricercatori_Definitiva.xlsx',
-                   dtype={"Scopus_ID1": str,"Scopus_ID2": str,"Scopus_ID3": str,"Scopus_ID4": str})
+df = pd.read_excel(path,dtype={"Scopus_ID1": str,"Scopus_ID2": str,"Scopus_ID3": str,"Scopus_ID4": str})
 
 df_p=df.copy()
 df_p = df_p.drop(columns=['Qualifica', 'Codice Nuovo Ssd',
-       'Descrizione Nuovo Ssd', 'Email Istituzionale', 'Numero Profili Scopus'])
+       'Descrizione Nuovo Ssd'])
 
 df1=df_p.copy()
 df2=df_p.copy()
@@ -118,9 +120,9 @@ df3 = df3.rename(columns={'Scopus_ID3': 'Scopus_ID'})
 df4 = df4.drop(columns=['Scopus_ID2','Scopus_ID1','Scopus_ID3'])
 df4 = df4.rename(columns={'Scopus_ID4': 'Scopus_ID'})
 
-df_new = pd.merge(df1, df2,  how='outer', left_on=['Scopus_ID','Cognome','Nome','Note'], right_on = ['Scopus_ID','Cognome','Nome','Note'], indicator=False)
-df_new = pd.merge(df_new, df3,  how='outer', left_on=['Scopus_ID','Cognome','Nome','Note'], right_on = ['Scopus_ID','Cognome','Nome','Note'], indicator=False)
-df_new = pd.merge(df_new, df4,  how='outer', left_on=['Scopus_ID','Cognome','Nome','Note'], right_on = ['Scopus_ID','Cognome','Nome','Note'], indicator=False)
+df_new = pd.merge(df1, df2,  how='outer', left_on=['Scopus_ID','Cognome','Nome'], right_on = ['Scopus_ID','Cognome','Nome'], indicator=False)
+df_new = pd.merge(df_new, df3,  how='outer', left_on=['Scopus_ID','Cognome','Nome'], right_on = ['Scopus_ID','Cognome','Nome'], indicator=False)
+df_new = pd.merge(df_new, df4,  how='outer', left_on=['Scopus_ID','Cognome','Nome'], right_on = ['Scopus_ID','Cognome','Nome'], indicator=False)
 
 df_new.dropna(inplace=True)
 
@@ -165,4 +167,18 @@ for ii in range(0,len(df_new)):
 
 
 Article_xlsx(df_Articles)
-Researchers_metrics(df_Articles)
+Researchers_metrics(df_Articles,df)
+Footer
+© 2023 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
