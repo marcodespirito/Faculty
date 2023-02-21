@@ -1,6 +1,6 @@
 # Faculty
 
-This code allows you to obtain information on articles published by UCSC faculty staff (RTDAs, RTDBs, Researchers, First and Second Professors) from Scopus API.
+This code allows you to obtain information on articles published by UCSC faculty staff (RTDAs, RTDBs, Researchers, Assistant and Full Professors) from Scopus API.
 
 1. The excel file ("Researchers.xlsx") lists the last names, first names, and Scopus IDs of all UCSC structured staff (medical faculty), updated to the end of 2022. Some researchers have more than one Scopus profile associated, due to the automatic Scopus profile creation process. Therefore, the database was checked manually to add multiple profile IDs and to check for cases of homonymy. However, it may still contain some problems and some profiles may be missing.
 2. Once you have downloaded the xlsx file, you need to download and install the pybliometrics tool to simplify access to the Scopus API (https://pypi.org/project/pybliometrics/). Before you can access the Scopus API (even using the pybliometrics package) you must request and obtain a Scopus key, and even with the key access to the Scopus API may be limited to a certain number of requests.
