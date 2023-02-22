@@ -1,6 +1,6 @@
-"""
-Created on Fri Jan 27 11:08:02 2023
-"""
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 
 from datetime import datetime, timedelta
 import pandas as pd
@@ -97,7 +97,7 @@ def Researchers_metrics(df_art,df):
     df.to_excel('Metriche_ricercatori.xlsx', sheet_name='Sheet1', index=False)  
 
 # WARNING: modify the following path to get the Ricercatori.xlsx file from your path
-path="path+Ricercatori.xlsx"
+path="Ricercatori.xlsx"
 
 # Read the CSV file from a URL into a DataFrame
 df = pd.read_excel(path,dtype={"Scopus_ID1": str,"Scopus_ID2": str,"Scopus_ID3": str,"Scopus_ID4": str})
@@ -168,17 +168,3 @@ for ii in range(0,len(df_new)):
 
 Article_xlsx(df_Articles)
 Researchers_metrics(df_Articles,df)
-Footer
-© 2023 GitHub, Inc.
-Footer navigation
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
